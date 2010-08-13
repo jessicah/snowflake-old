@@ -1,0 +1,92 @@
+Index: asmcomp/asmlink.ml
+===================================================================
+diff -r /trunk/asmcomp/asmlink.ml /ocaml-patched/asmcomp/asmlink.ml
+104c104,107
+<     else "libasmrun" ^ ext_lib in
+---
+> 	else
+> 		if String.length !Clflags.use_runtime > 0
+> 			then !Clflags.use_runtime
+> 			else "libasmrun" ^ ext_lib in
+106c109
+<     if !Clflags.nopervasives then []
+---
+>     if !Clflags.nopervasives && String.length !Clflags.use_runtime = 0 then []
+288c291,293
+<       (if !Clflags.nopervasives then "" else Config.native_c_libraries)
+---
+> 			(if String.length !Clflags.c_libraries > 0 then !Clflags.c_libraries
+> 			 else if !Clflags.nopervasives then "" else Config.native_c_libraries)
+> 			(*(if !Clflags.nopervasives then "" else Config.native_c_libraries)*)
+308c313
+<     if !Clflags.nopervasives then objfiles
+---
+>     if !Clflags.nopervasives || !Clflags.free_standing then objfiles
+326c331,333
+<   let startup_obj = Filename.temp_file "camlstartup" ext_obj in
+---
+>   let startup_obj =
+> 		if !Clflags.keep_startup_file then output_name ^ ".startup" ^ ext_obj
+> 		else Filename.temp_file "camlstartup" ext_obj in
+332c339
+<     remove_file startup_obj
+---
+>     if not !Clflags.keep_startup_file then remove_file startup_obj
+Index: driver/main_args.ml
+===================================================================
+diff -r trunk/driver/main_args.ml ocaml-patched/driver/main_args.ml
+368a369,376
+> let mk_freestanding f =
+>   "-freestanding", Arg.Unit f, " (snowflake ext)"
+> ;;
+> 
+> let mk_clibrary f =
+>   "-clibrary", Arg.String f, " (snowflake ext)"
+> ;;
+> 
+492a501
+>   val _use_runtime : string -> unit
+519a529,531
+>   val _freestanding :  unit -> unit
+>   val _clibrary :  string -> unit
+> 
+628a641,642
+>     mk_freestanding ignore;
+> 
+702a717
+>     mk_use_runtime F._use_runtime;
+728a744,746
+>     mk_freestanding F._freestanding;
+>     mk_clibrary F._clibrary;
+> 
+Index: driver/main_args.mli
+===================================================================
+diff -r trunk/driver/main_args.mli ocaml-patched/driver/main_args.mli
+135a136
+>   val _use_runtime : string -> unit
+162a164,166
+>   val _freestanding :  unit -> unit
+>   val _clibrary :  string -> unit
+> 
+Index: driver/optmain.ml
+===================================================================
+diff -r trunk/driver/optmain.ml ocaml-patched/driver/optmain.ml
+136a137
+> 	let _use_runtime s = use_runtime := s
+159a161,163
+> 	
+> 	let _freestanding () = free_standing := true; no_std_include := true
+> 	let _clibrary s = c_libraries := !c_libraries ^ " " ^ s
+Index: utils/clflags.ml
+===================================================================
+diff -r trunk/utils/clflags.ml ocaml-patched/utils/clflags.ml
+94a95,97
+> 
+> let free_standing = ref false (* -freestanding *)
+> let c_libraries = ref "" (* -clibrary *)
+Index: utils/clflags.mli
+===================================================================
+diff -r trunk/utils/clflags.mli ocaml-patched/utils/clflags.mli
+78a79,80
+> val free_standing : bool ref
+> val c_libraries : string ref

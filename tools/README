@@ -1,0 +1,9 @@
+
+Builds ocaml 3.12.0 toolchain
+
+The configure-ocaml removes checks for X11, which results
+in omitting the "graph" library from being built.
+
+The set of configure options used will likely only work on
+a linux system, and is used to build a 32-bit ocamlopt
+compiler even when the host is 64-bit.
