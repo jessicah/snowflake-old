@@ -1,0 +1,41 @@
+
+true: -byte, native, nostdlib
+
+<**/*.*>: snowflake
+
+<tools>: -traverse, not_hygienic
+
+<tools/bin2ml.*>: -snowflake
+<myocamlbuild_config.*>: -snowflake, warn_p
+
+### libraries/stdlib
+
+<libraries/stdlib/pervasives.ml> or <libraries/stdlib/pervasives.mli> or <libraries/stdlib/camlinternalOO.mli>: nopervasives
+<libraries/stdlib/camlinternalOO*.cmx>: inline(0)
+<libraries/stdlib/scanf*.cmx>: inline(9)
+<libraries/stdlib/*Labels.ml*>: nolabels
+
+<kernel/**/*.*>: snowflake_extlib, snowflake_threads, snowflake_stdlib, snowflake_bitstring, snowflake_bigarray, snowflake_cairo, snowflake_freetype
+<libraries/{bigarray,extlib,threads,bitstring,cairo,freetype}/**.ml*>: snowflake_stdlib
+<libraries/{cairo,freetype}/**.ml*>: snowflake_bigarray
+
+<{libraries,kernel}/**/*.*>: linkall
+
+<libraries/m/**/*.*>: libm
+<libraries/c/*.{c,s,S}>: libc
+<libraries/asmrun/*.{c,s,S}>: libasmrun
+<libraries/bigarray/*.{c,s,S}>: libbigarray
+<libraries/threads/*.{c,s,S}>: libthreads
+<libraries/kernel/*.{c,s,S}>: libkernel
+<libraries/bitstring/*.{c,s,S}>: libbitstring
+<libraries/x86emu/*.c>: libx86emu
+<libraries/cairo/*.c>: libmlcairo
+<libraries/freetype/*.c>: libmlfreetype
+
+<kernel/networkProtocolStack.ml>: use_bitstring
+<kernel/networkStack.ml>: use_bitstring
+<kernel/dhcpClient.ml>: use_bitstring
+<kernel/ELF.ml>: use_bitstring
+<kernel/DAAP.ml>: use_bitstring
+
+<kernel/elfParsing.ml>: use_bitstring

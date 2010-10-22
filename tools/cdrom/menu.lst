@@ -1,0 +1,6 @@
+default 0
+timeout 1
+
+title   Snowflake
+kernel  /boot/snowflake.elf
+

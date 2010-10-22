@@ -1,0 +1,2 @@
+
+int isprint(int c);
