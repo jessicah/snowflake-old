@@ -33,3 +33,4 @@ custom.o
 i386.o
 # dynlink.o -- this should probably be included....
 natdynlink.o
+sys.o

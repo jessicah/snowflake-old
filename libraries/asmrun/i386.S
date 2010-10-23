@@ -272,25 +272,7 @@ LBL(108):
         .globl  G(caml_raise_exn)
         .align  FUNCTION_ALIGN
 G(caml_raise_exn):
-        testl   $1, G(caml_backtrace_active)
-        jne     LBL(110)
         movl    G(caml_exception_pointer), %esp
-        popl    G(caml_exception_pointer)
-        UNDO_ALIGN_STACK(8)
-        ret
-LBL(110):
-        movl    %eax, %esi          /* Save exception bucket in esi */
-        movl    G(caml_exception_pointer), %edi /* SP of handler */
-        movl    0(%esp), %eax       /* PC of raise */
-        leal    4(%esp), %edx       /* SP of raise */
-        ALIGN_STACK(12)
-        pushl   %edi                        /* arg 4: sp of handler */
-        pushl   %edx                        /* arg 3: sp of raise */
-        pushl   %eax                        /* arg 2: pc of raise */
-        pushl   %esi                        /* arg 1: exception bucket */
-        call    G(caml_stash_backtrace)
-        movl    %esi, %eax              /* Recover exception bucket */
-        movl    %edi, %esp
         popl    G(caml_exception_pointer)
         UNDO_ALIGN_STACK(8)
         ret
@@ -301,22 +283,7 @@ LBL(110):
         .align  FUNCTION_ALIGN
 G(caml_raise_exception):
         PROFILE_C
-	testl   $1, G(caml_backtrace_active)
-        jne     LBL(111)
         movl    4(%esp), %eax
-        movl    G(caml_exception_pointer), %esp
-        popl    G(caml_exception_pointer)
-        UNDO_ALIGN_STACK(8)
-        ret
-LBL(111):
-        movl    4(%esp), %esi          /* Save exception bucket in esi */
-        ALIGN_STACK(12)
-        pushl   G(caml_exception_pointer)   /* arg 4: sp of handler */
-        pushl   G(caml_bottom_of_stack)     /* arg 3: sp of raise */
-        pushl   G(caml_last_return_address) /* arg 2: pc of raise */
-        pushl   %esi                        /* arg 1: exception bucket */
-        call    G(caml_stash_backtrace)
-        movl    %esi, %eax              /* Recover exception bucket */
         movl    G(caml_exception_pointer), %esp
         popl    G(caml_exception_pointer)
         UNDO_ALIGN_STACK(8)

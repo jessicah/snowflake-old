@@ -11,10 +11,12 @@ ISO = snowflake.iso
 
 all: myocamlbuild_config.ml
 	$(MAKE) -C tools all
-	#$(OCAMLBUILD) libraries/stdlib/stdlib.cmxa
+	$(OCAMLBUILD) libraries/stdlib/stdlib.cmxa
 	#$(OCAMLBUILD) libraries/bigarray/bigarray.cmxa
 	#$(OCAMLBUILD) libraries/extlib/extlib.cmxa
 	$(OCAMLBUILD) libraries/asmrun/libasmrun.a
+	$(OCAMLBUILD) libraries/c/libc.a
+	$(OCAMLBUILD) libraries/m/libm.a
 	$(OCAMLBUILD) $(KERNEL)
 	rm -rf tools/cdrom/iso_prep
 	mkdir -p tools/cdrom/iso_prep/boot/grub/

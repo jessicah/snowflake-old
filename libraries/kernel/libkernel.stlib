@@ -1,0 +1,6 @@
+stage1.o
+stage2.o
+asm_stubs.o
+idt.o
+irqs.o
+# multiboot_stubs.o

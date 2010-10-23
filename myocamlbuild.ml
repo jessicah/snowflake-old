@@ -69,12 +69,12 @@ let copy_rule' ?insert src dst =
 
     snowflake_lib "stdlib";;
 
-(*** bigarray.cmxa ***)
+(*(*** bigarray.cmxa ***)
 
     (* just don't bother; seems to have some strange bugs for this particular library *)
     (* let build system pull in bigarray.cmx instead... *)
 	
-	snowflake_lib "bigarray";;
+	snowflake_lib "bigarray";;*)
 
 (*(*** threads.cmxa ***)
 
@@ -90,12 +90,12 @@ let copy_rule' ?insert src dst =
 	
 	snowflake_lib "freetype";;*)
 
-(*** extlib.cmxa ***)
+(*(*** extlib.cmxa ***)
 
     snowflake_lib "extlib";;
     
     (* dep on internal stdlib module *)
-    dep ["file:libraries/extlib/IO.ml"] ["libraries/stdlib/camlinternalOO.cmx"];;
+    dep ["file:libraries/extlib/IO.ml"] ["libraries/stdlib/camlinternalOO.cmx"];;*)
 
 (*(*** bitstring.cmxa, bitstring_persistent.cmxa, pa_bitstring.cmo ***)
 
@@ -257,7 +257,7 @@ let caml_headers = [
 							] @ caml_headers;
         };;
 
-(*** libbigarray.a ***)
+(*(*** libbigarray.a ***)
 
     mk_stlib {
         name = "libbigarray";
@@ -283,7 +283,7 @@ let caml_headers = [
                 "libraries/include/threads.h";
                 "libraries/include/caml/bigarray.h";
 							] @ caml_headers;
-        };;
+        };;*)
 
 (*(*** libbitstring.a ***)
 
@@ -383,7 +383,7 @@ let caml_headers = [
 	
 	let deps = [
 		"libraries/include/multiboot.h";
-		"libraries/include/caml/bigarray.h";
+		(*"libraries/include/caml/bigarray.h";*)
 		"libraries/kernel/idt.h";
 		"libraries/include/list.h";
 		"libraries/include/assert.h";
@@ -406,11 +406,11 @@ let caml_headers = [
 			A"-clibrary"; A"-lgcc";
             A"-clibrary"; A"-lc";
             A"-clibrary"; A"-lm";
-			A"-clibrary"; A"-lbigarray";
+			(*A"-clibrary"; A"-lbigarray";*)
 			(*A"-clibrary"; A"-lthreads";*)
         ]);;
 	
-	dep ["file:kernel/snowflake.native"] ["libkernel.a"; "libm.a"; "libc.a"; "libgcc.a"; "libbigarray.a"; (*"libthreads.a"; "libbitstring.a"; "libx86emu.a"; "libmlcairo.a"; "libmlfreetype.a"*)];;
+	dep ["file:kernel/snowflake.native"] ["libkernel.a"; "libm.a"; "libc.a"; "libgcc.a"; (*"libbigarray.a"; "libthreads.a"; "libbitstring.a"; "libx86emu.a"; "libmlcairo.a"; "libmlfreetype.a"*)];;
 
 (*** ocamlopt.opt ***)
 		
